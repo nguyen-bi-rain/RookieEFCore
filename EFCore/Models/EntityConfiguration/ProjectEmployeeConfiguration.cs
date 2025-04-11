@@ -10,6 +10,14 @@ namespace EFCore.Models.EntityConfiguration
         {
             builder.ToTable("Project_Employees");
             builder.HasKey(pe => new { pe.ProjectId, pe.EmployeeId });
+            builder.HasOne(pe => pe.Project)
+                    .WithMany(p => p.Employees)
+                    .HasForeignKey(pe => pe.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(pe => pe.Employee)
+                    .WithMany(e => e.Projects)
+                    .HasForeignKey(pe => pe.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade);
             builder.Property(p => p.Id)
                .ValueGeneratedOnAdd()
                .HasDefaultValueSql("NEWSEQUENTIALID()");
